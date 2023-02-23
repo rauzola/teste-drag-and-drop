@@ -1,32 +1,11 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-  *,
-  *::before,
-  *::after {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    box-sizing: border-box;
-  }
+
 
   body {
    
     font-family: 'Montserrat', sans-serif;
-
-    &::-webkit-scrollbar {
-      width: 1rem;               
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #060B28;        
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #2F5AFF;    
-      border-radius: .5rem;       
-      border: 0.25rem solid #060B28;  
-    }
   }
 
   ul {
@@ -78,13 +57,13 @@ export const GlobalStyles = createGlobalStyle`
 
 .col-1 {
   flex: 1;
-  border-right: 1px solid black;
+  /* border-right: 1px solid black; */
   padding-right: 10px;
 }
 
 .col-2 {
   flex: 1;
-  border-left: 1px solid black;
+  /* border-left: 1px solid black; */
   padding-left: 10px;
 }
 
@@ -100,7 +79,7 @@ ul {
 li {
   margin-bottom: 20px;
   padding: 10px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 `;
