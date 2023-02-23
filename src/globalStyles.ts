@@ -72,40 +72,35 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   margin: 20px;
-  .columns-container {
-    display: flex;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+  .container {
+  display: flex;
+}
 
-  .column {
-    flex: 1;
-    padding: 10px;
-    border-right: 1px solid #ccc;
-  }
+.col-1 {
+  flex: 1;
+  border-right: 1px solid black;
+  padding-right: 10px;
+}
 
-  .column:last-child {
-    border-right: none;
-  }
+.col-2 {
+  flex: 1;
+  border-left: 1px solid black;
+  padding-left: 10px;
+}
 
-  .column h2 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+h2 {
+  margin-top: 0;
+}
 
-  .column ul {
-    list-style: none;
-    padding-left: 0;
-  }
+ul {
+  list-style: none;
+  padding: 0;
+}
 
-  .column li {
-    margin-bottom: 5px;
-  }
+li {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid black;
+}
 
-  .item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
 `;
