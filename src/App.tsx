@@ -1,175 +1,127 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import initialData from "./initial-data";
+import Column from "./components/Column";
+import { IData } from "./components/Interfaces";
 
-import * as Styled from "./styles";
+function Teste() {
+  const [state, setState] = useState<IData>(initialData);
 
-interface Item {
-  id: number;
-  operation: string;
-  type: string;
-  name: string;
-  posicao?: string;
-}
+	const onDragEnd = (result: DropResult) => {
+		document.body.style.color = "inherit";
+		const { destination, source, draggableId, type } = result;
 
-interface ItemPosition {
-  id: number;
-  position: string;
-}
+		if (!destination) {
+			return;
+		}
 
-export function Teste() {
-  const [itemPositions, setItemPositions] = useState<ItemPosition[]>([]);
+		if (
+			destination.droppableId === source.droppableId &&
+			destination.index === source.index
+		) {
+			return;
+		}
 
-  const [items, setItems] = useState<Item[]>([
-    {
-      id: 1,
-      operation: "SUM",
-      type: "NUMBER",
-      name: "Soma De Domicilio",
-    },
-    {
-      id: 2,
-      operation: "AVERAGE",
-      type: "NUMBER",
-      name: "Rendimento Mensal Médio",
-    },
-    {
-      id: 3,
-      operation: "Expression",
-      type: "DERIVED",
-      name: "Moradores/Domicilios",
-    },
-    {
-      id: 4,
-      operation: "COUNT",
-      type: "NUMBER",
-      name: "Total De Empresas",
-    },
-    {
-      id: 5,
-      operation: "MINIMUM",
-      type: "NUMBER",
-      name: "Mínimo Domicílio",
-    },
-    {
-      id: 6,
-      operation: "MAXIMUM",
-      type: "NUMBER",
-      name: "Máximo Domicílio",
-    },
-    {
-      id: 7,
-      operation: "SUM",
-      type: "NUMBER",
-      name: "Soma De Domicilio",
-    },
-    {
-      id: 8,
-      operation: "AVERAGE",
-      type: "NUMBER",
-      name: "Rendimento Mensal Médio",
-    },
-    
-  ]);
+		if (type === "column") {
+			const newColumnOrder = Array.from(state.columnOrder);
+			newColumnOrder.splice(source.index, 1);
+			newColumnOrder.splice(destination.index, 0, draggableId);
+			const newState = {
+				...state,
+				columnOrder: newColumnOrder,
+			};
+			setState(newState);
+			return;
+		}
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-    e.dataTransfer.setData("text/plain", id.toString());
-  };
+		const startColumn = state.columns[source.droppableId];
+		const finishColumn = state.columns[destination.droppableId];
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
+		if (startColumn === finishColumn) {
+			const newTaskIds = Array.from(startColumn.taskIds);
+			newTaskIds.splice(source.index, 1);
+			newTaskIds.splice(destination.index, 0, draggableId);
 
-  const handleDrop = (
-    e: React.DragEvent<HTMLDivElement>,
-    index: number,
-    coluna: string
-  ) => {
-    const itemId = e.dataTransfer.getData("text");
-    const itemIndex = items.findIndex((item) => item.id === Number(itemId));
-    const newItems = [...items];
-    const [item] = newItems.splice(itemIndex, 1);
-  
-    // Atualiza a posição do item
-    item.posicao = coluna;
-  
-    newItems.splice(index + (4 - newItems.length), 0, item);
-    setItems(newItems);
-  
-    // Atualiza a posição do item no estado itemPositions
-    updateItemPosition(Number(itemId), coluna);
-  };
-  
+			const newColumn = {
+				...startColumn,
+				taskIds: newTaskIds,
+			};
 
-  const updateItemPosition = (itemId: number, newPosition: string) => {
-    setItemPositions((prevPositions) => {
-      const itemPosition = prevPositions.find((pos) => pos.id === itemId);
-      if (itemPosition) {
-        itemPosition.position = newPosition;
-        return [...prevPositions];
-      } else {
-        return [...prevPositions, { id: itemId, position: newPosition }];
-      }
-    });
-  };
+			const newState = {
+				...state,
+				columns: {
+					...state.columns,
+					[newColumn.id]: newColumn,
+				},
+			};
+
+			setState(newState);
+			return;
+		}
+		const newStartTaskIds = Array.from(startColumn.taskIds);
+		newStartTaskIds.splice(source.index, 1);
+		const newStartColumn = {
+			...startColumn,
+			taskIds: newStartTaskIds,
+		};
+
+		const newFinishTaskIds = Array.from(finishColumn.taskIds);
+		newFinishTaskIds.splice(destination.index, 0, draggableId);
+		const newFinishColumn = {
+			...finishColumn,
+			taskIds: newFinishTaskIds,
+		};
+		const newState = {
+			...state,
+			columns: {
+				...state.columns,
+				[newStartColumn.id]: newStartColumn,
+				[newFinishColumn.id]: newFinishColumn,
+			},
+		};
+
+		setState(newState);
+	};
+
 
   return (
     <>
-      <div className="container">
-        <div className="col-1">
-          <h2>Coluna 1</h2>
-          <ul>
-            {items.slice(0, 4).map((item, index) => (
-              <li
-                key={item.id}
-                draggable={true}
-                onDragStart={(e) => handleDragStart(e, item.id)}
-                onDragOver={(e) => handleDragOver(e)}
-                onDrop={(e) => handleDrop(e, index)}
-              >
-                <Styled.WrapperItem>
-                  <Styled.WrapperTitle>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <h2>{item.type} {item.id}</h2>
-                      <p>{item.operation}</p>
-                      
-                    </div>
-                  </Styled.WrapperTitle>
+      	<DragDropContext onDragEnd={onDragEnd}>
+			<React.StrictMode>
+				<Droppable
+					droppableId="all-columns"
+					direction="horizontal"
+					type="column"
+				>
+					{(droppableProvided) => (
+						<div
+							ref={droppableProvided.innerRef}
+							{...droppableProvided.droppableProps}
+							className="flex"
+						>
+							{state.columnOrder.map((columnId, index) => {
+								const column = state.columns[columnId];
+								const tasks = column.taskIds.map(
+									(taskId) => state.tasks[taskId]
+								);
 
-                  <h3>{item.name}</h3>
-                </Styled.WrapperItem>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div
-          className="col-2"
-          onDragOver={(e) => handleDragOver(e)}
-          onDrop={(e) => handleDrop(e, 4)}
-        >
-          <h2>Coluna 2</h2>
-          <ul>
-            {items.slice(4, 8).map((item, index) => (
-              <li
-                key={item.id}
-                draggable={true}
-                onDragStart={(e) => handleDragStart(e, item.id)}
-                onDragOver={(e) => handleDragOver(e)}
-                onDrop={(e) => handleDrop(e, index + 4)}
-              >
-                <Styled.WrapperItem>
-                  <Styled.WrapperTitle>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                    <h2>{item.type} {item.id}</h2>
-                      <p>{item.operation}</p>
-                    </div>
-                    
-                  </Styled.WrapperTitle>
-                  <h3>{item.name}</h3>
-                </Styled.WrapperItem>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+								return (
+									<Column
+										key={column.id}
+										column={column}
+										tasks={tasks}
+										index={index}
+									/>
+								);
+							})}
+							{droppableProvided.placeholder}
+						</div>
+					)}
+				</Droppable>
+			</React.StrictMode>
+		</DragDropContext>
     </>
   );
 }
+
+export default memo(Teste);

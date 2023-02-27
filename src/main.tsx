@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Teste } from "./App";
+import  Teste  from "./App";
 import { GlobalStyles } from "./globalStyles";
+import { resetServerContext } from "react-beautiful-dnd";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -9,3 +10,4 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <Teste />
   </React.StrictMode>
 );
+resetServerContext();
