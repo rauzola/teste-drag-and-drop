@@ -1,6 +1,6 @@
-import Draggable, { DraggableCore } from "react-draggable";
+import React, { useState } from "react";
+import { DraggableCore, DraggableEvent } from "react-draggable";
 import DraggableList from "react-draggable-lists";
-import react, { useState } from "react";
 import * as S from "./styles";
 
 const arr = [
@@ -55,24 +55,37 @@ const arr = [
 ];
 
 export function Teste() {
-  const [index, setIndex] = useState();
+  const [index, setIndex] = useState<number>();
 
   console.log(index);
+
+  const handleDrag = (e: DraggableEvent, ui: any) => {
+    ui.node.style.transform = `scale(0.8)`;
+  };
+
+  const handleStop = (e: DraggableEvent, ui: any) => {
+    ui.node.style.transform = "";
+  };
 
   return (
     <>
       <div className="container">
-        <div >
-          <DraggableList
-            width={220}
-            height={150}
-            rowSize={2}
-          >
+        <div>
+          <DraggableList width={220} height={150} rowSize={2}>
             {arr.map((item, index) => (
-           
-                <S.WrapperItem key={index}>
+              <DraggableCore
+                key={index}
+                onDrag={handleDrag}
+                onStop={handleStop}
+              >
+                <S.WrapperItem>
                   <S.WrapperTitle>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
                       <h2>
                         {item.type} {item.id}
                       </h2>
@@ -82,7 +95,7 @@ export function Teste() {
 
                   <h3>{item.name}</h3>
                 </S.WrapperItem>
-              
+              </DraggableCore>
             ))}
           </DraggableList>
         </div>
