@@ -1,127 +1,92 @@
-import React, { useState, memo } from "react";
-import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
-import initialData from "./initial-data";
-import Column from "./components/Column";
-import { IData } from "./components/Interfaces";
+import Draggable, { DraggableCore } from "react-draggable";
+import DraggableList from "react-draggable-lists";
+import react, { useState } from "react";
+import * as S from "./styles";
 
-function Teste() {
-  const [state, setState] = useState<IData>(initialData);
+const arr = [
+  {
+    id: 1,
+    operation: "SUM",
+    type: "NUMBER",
+    name: "Soma De Domicilio",
+  },
+  {
+    id: 2,
+    operation: "AVERAGE",
+    type: "NUMBER",
+    name: "Rendimento Mensal Médio",
+  },
+  {
+    id: 3,
+    operation: "Expression",
+    type: "DERIVED",
+    name: "Moradores/Domicilios",
+  },
+  {
+    id: 4,
+    operation: "COUNT",
+    type: "NUMBER",
+    name: "Total De Empresas",
+  },
+  {
+    id: 5,
+    operation: "MINIMUM",
+    type: "NUMBER",
+    name: "Mínimo Domicílio",
+  },
+  {
+    id: 6,
+    operation: "MAXIMUM",
+    type: "NUMBER",
+    name: "Máximo Domicílio",
+  },
+  {
+    id: 7,
+    operation: "SUM",
+    type: "NUMBER",
+    name: "Soma De Domicilio",
+  },
+  {
+    id: 8,
+    operation: "AVERAGE",
+    type: "NUMBER",
+    name: "Rendimento Mensal Médio",
+  },
+];
 
-	const onDragEnd = (result: DropResult) => {
-		document.body.style.color = "inherit";
-		const { destination, source, draggableId, type } = result;
+export function Teste() {
+  const [index, setIndex] = useState();
 
-		if (!destination) {
-			return;
-		}
-
-		if (
-			destination.droppableId === source.droppableId &&
-			destination.index === source.index
-		) {
-			return;
-		}
-
-		if (type === "column") {
-			const newColumnOrder = Array.from(state.columnOrder);
-			newColumnOrder.splice(source.index, 1);
-			newColumnOrder.splice(destination.index, 0, draggableId);
-			const newState = {
-				...state,
-				columnOrder: newColumnOrder,
-			};
-			setState(newState);
-			return;
-		}
-
-		const startColumn = state.columns[source.droppableId];
-		const finishColumn = state.columns[destination.droppableId];
-
-		if (startColumn === finishColumn) {
-			const newTaskIds = Array.from(startColumn.taskIds);
-			newTaskIds.splice(source.index, 1);
-			newTaskIds.splice(destination.index, 0, draggableId);
-
-			const newColumn = {
-				...startColumn,
-				taskIds: newTaskIds,
-			};
-
-			const newState = {
-				...state,
-				columns: {
-					...state.columns,
-					[newColumn.id]: newColumn,
-				},
-			};
-
-			setState(newState);
-			return;
-		}
-		const newStartTaskIds = Array.from(startColumn.taskIds);
-		newStartTaskIds.splice(source.index, 1);
-		const newStartColumn = {
-			...startColumn,
-			taskIds: newStartTaskIds,
-		};
-
-		const newFinishTaskIds = Array.from(finishColumn.taskIds);
-		newFinishTaskIds.splice(destination.index, 0, draggableId);
-		const newFinishColumn = {
-			...finishColumn,
-			taskIds: newFinishTaskIds,
-		};
-		const newState = {
-			...state,
-			columns: {
-				...state.columns,
-				[newStartColumn.id]: newStartColumn,
-				[newFinishColumn.id]: newFinishColumn,
-			},
-		};
-
-		setState(newState);
-	};
-
+  console.log(index);
 
   return (
     <>
-      	<DragDropContext onDragEnd={onDragEnd}>
-			<React.StrictMode>
-				<Droppable
-					droppableId="all-columns"
-					direction="horizontal"
-					type="column"
-				>
-					{(droppableProvided) => (
-						<div
-							ref={droppableProvided.innerRef}
-							{...droppableProvided.droppableProps}
-							className="flex"
-						>
-							{state.columnOrder.map((columnId, index) => {
-								const column = state.columns[columnId];
-								const tasks = column.taskIds.map(
-									(taskId) => state.tasks[taskId]
-								);
+      <div className="container">
+        <div >
+          <DraggableList
+            width={220}
+            height={150}
+            rowSize={2}
+          >
+            {arr.map((item, index) => (
+           
+                <S.WrapperItem key={index}>
+                  <S.WrapperTitle>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <h2>
+                        {item.type} {item.id}
+                      </h2>
+                      <p>{item.operation}</p>
+                    </div>
+                  </S.WrapperTitle>
 
-								return (
-									<Column
-										key={column.id}
-										column={column}
-										tasks={tasks}
-										index={index}
-									/>
-								);
-							})}
-							{droppableProvided.placeholder}
-						</div>
-					)}
-				</Droppable>
-			</React.StrictMode>
-		</DragDropContext>
+                  <h3>{item.name}</h3>
+                </S.WrapperItem>
+              
+            ))}
+          </DraggableList>
+        </div>
+      </div>
     </>
   );
 }
-
-export default memo(Teste);
