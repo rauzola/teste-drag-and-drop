@@ -1,64 +1,19 @@
-import React, { useState } from "react";
 import { DraggableCore, DraggableEvent } from "react-draggable";
 import DraggableList from "react-draggable-lists";
 import * as S from "./styles";
 
-const arr = [
-  {
-    id: 1,
-    operation: "SUM",
-    type: "NUMBER",
-    name: "Soma De Domicilio",
-  },
-  {
-    id: 2,
-    operation: "AVERAGE",
-    type: "NUMBER",
-    name: "Rendimento Mensal Médio",
-  },
-  {
-    id: 3,
-    operation: "Expression",
-    type: "DERIVED",
-    name: "Moradores/Domicilios",
-  },
-  {
-    id: 4,
-    operation: "COUNT",
-    type: "NUMBER",
-    name: "Total De Empresas",
-  },
-  {
-    id: 5,
-    operation: "MINIMUM",
-    type: "NUMBER",
-    name: "Mínimo Domicílio",
-  },
-  {
-    id: 6,
-    operation: "MAXIMUM",
-    type: "NUMBER",
-    name: "Máximo Domicílio",
-  },
-  {
-    id: 7,
-    operation: "SUM",
-    type: "NUMBER",
-    name: "Soma De Domicilio",
-  },
-  {
-    id: 8,
-    operation: "AVERAGE",
-    type: "NUMBER",
-    name: "Rendimento Mensal Médio",
-  },
-];
+type Item = {
+  id: string;
+  operation: string;
+  type: string;
+  name: string;
+};
 
-export function Teste() {
-  const [index, setIndex] = useState<number>();
+type Props = {
+  arr: Item[];
+};
 
-  console.log(index);
-
+export function Teste(props: Props) {
   const handleDrag = (e: DraggableEvent, ui: any) => {
     ui.node.style.transform = `scale(0.8)`;
   };
@@ -66,40 +21,37 @@ export function Teste() {
   const handleStop = (e: DraggableEvent, ui: any) => {
     ui.node.style.transform = "";
   };
+  console.log(props)
 
   return (
-    <>
-      <div className="container">
-        <div>
-          <DraggableList width={220} height={150} rowSize={2}>
-            {arr.map((item, index) => (
-              <DraggableCore
-                key={index}
-                onDrag={handleDrag}
-                onStop={handleStop}
-              >
-                <S.WrapperItem>
-                  <S.WrapperTitle>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <h2>
-                        {item.type} {item.id}
-                      </h2>
-                      <p>{item.operation}</p>
-                    </div>
-                  </S.WrapperTitle>
+    <div className="container">
+      <DraggableList width={220} height={150} rowSize={2}>
+        {props.arr.map((item) => (
+          <DraggableCore
+            key={item.id}
+            onDrag={handleDrag}
+            onStop={handleStop}
+          >
+            <S.WrapperItem>
+              <S.WrapperTitle>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <h2>
+                    {item.type} 
+                  </h2>
+                  <p>{item.operation}</p>
+                </div>
+              </S.WrapperTitle>
 
-                  <h3>{item.name}</h3>
-                </S.WrapperItem>
-              </DraggableCore>
-            ))}
-          </DraggableList>
-        </div>
-      </div>
-    </>
+              <h3>{item.name}</h3>
+            </S.WrapperItem>
+          </DraggableCore>
+        ))}
+      </DraggableList>
+    </div>
   );
 }
