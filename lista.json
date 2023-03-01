@@ -1,0 +1,42 @@
+[
+  {
+    "id": "63ee1ab6f864499825d60ae9",
+    "name": "Soma de domicilio",
+    "type": "NUMBER",
+    "operation": "SUM",
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "63ee1b2ef864499825d60b63",
+    "name": "Rendimento mensal médio",
+    "type": "NUMBER",
+    "operation": "AVERAGE",
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "63ee1b92f864499825d60be1",
+    "name": "Moradores/Domicilios",
+    "type": "DERIVED",
+    "operation": "NONE",
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "63ee1c00f864499825d60c61",
+    "name": "Total de empresas",
+    "type": "NUMBER",
+    "operation": "COUNT",
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  }
+]

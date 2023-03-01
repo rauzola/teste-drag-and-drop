@@ -3,37 +3,11 @@ import ReactDOM from "react-dom";
 import { Teste } from "./App";
 import { GlobalStyles } from "./globalStyles";
 
-const arr = [
-  {
-    id: "63ee1ab6f864499825d60ae9",
-    name: "Soma de domicilio",
-    type: "NUMBER",
-    operation: "SUM",
-  },
-  {
-    id: "63ee1b2ef864499825d60b63",
-    name: "Rendimento mensal médio",
-    type: "NUMBER",
-    operation: "AVERAGE",
-  },
-  {
-    id: "63ee1b92f864499825d60be1",
-    name: "Moradores/Domicilios",
-    type: "DERIVED",
-    operation: "NONE",
-  },
-  {
-    id: "63ee1c00f864499825d60c61",
-    name: "Total de empresas",
-    type: "NUMBER",
-    operation: "COUNT",
-  },
-];
 
 ReactDOM.render(
   <React.StrictMode>
     <GlobalStyles />
-    <Teste arr={arr} />
+    <Teste />
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -1,57 +1,76 @@
-import { DraggableCore, DraggableEvent } from "react-draggable";
-import DraggableList from "react-draggable-lists";
-import * as S from "./styles";
+import React from "react";
+import ReactDOM from "react-dom";
+import {
+  GridContextProvider,
+  GridDropZone,
+  GridItem,
+  swap,
+  move
+} from "react-grid-dnd";
+import "./styles.css";
+ 
+export function Teste() {
+  const [items, setItems] = React.useState({
+    left: [
+      { id: 1, name: "ben" },
+      { id: 2, name: "joe" },
+      { id: 3, name: "jason" },
+      { id: 4, name: "chris" },
+      { id: 5, name: "heather" },
+      { id: 6, name: "Richard" },
+      { id: 7, name: "george" },
+      { id: 8, name: "rupert" },
+      { id: 9, name: "alice" },
+      { id: 10, name: "katherine" },
+      { id: 11, name: "pam" },
+      { id: 12, name: "katie" }
+    ],
+  
+  });
 
-type Item = {
-  id: string;
-  operation: string;
-  type: string;
-  name: string;
-};
+  function onChange(sourceId: string | number, sourceIndex: number, targetIndex: number, targetId: string | number) {
+    if (targetId) {
+      const result = move(
+        items[sourceId],
+        items[targetId],
+        sourceIndex,
+        targetIndex
+      );
+      return setItems({
+        ...items,
+        [sourceId]: result[0],
+        [targetId]: result[1]
+      });
+    }
 
-type Props = {
-  arr: Item[];
-};
-
-export function Teste(props: Props) {
-  const handleDrag = (e: DraggableEvent, ui: any) => {
-    ui.node.style.transform = `scale(0.8)`;
-  };
-
-  const handleStop = (e: DraggableEvent, ui: any) => {
-    ui.node.style.transform = "";
-  };
-  console.log(props)
+    const result = swap(items[sourceId], sourceIndex, targetIndex);
+    return setItems({
+      ...items,
+      [sourceId]: result
+    });
+  }
 
   return (
-    <div className="container">
-      <DraggableList width={220} height={150} rowSize={2}>
-        {props.arr.map((item) => (
-          <DraggableCore
-            key={item.id}
-            onDrag={handleDrag}
-            onStop={handleStop}
-          >
-            <S.WrapperItem>
-              <S.WrapperTitle>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <h2>
-                    {item.type} 
-                  </h2>
-                  <p>{item.operation}</p>
+    <GridContextProvider onChange={onChange}>
+      <div className="container">
+        <GridDropZone
+          className="dropzone left"
+          id="left"
+          boxesPerRow={4}
+          rowHeight={70}
+        >
+          {items.left.map(item => (
+            <GridItem key={item.name}>
+              <div className="grid-item">
+                <div className="grid-item-content">
+                  {item.name[0].toUpperCase()}
                 </div>
-              </S.WrapperTitle>
-
-              <h3>{item.name}</h3>
-            </S.WrapperItem>
-          </DraggableCore>
-        ))}
-      </DraggableList>
-    </div>
+              </div>
+            </GridItem>
+          ))}
+        </GridDropZone>
+      
+      </div>
+    </GridContextProvider>
   );
 }
