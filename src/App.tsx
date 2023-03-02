@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import {
   GridContextProvider,
@@ -8,29 +8,40 @@ import {
   move
 } from "react-grid-dnd";
 import "./styles.css";
- 
+
+interface Item {
+  id: number;
+  name: string;
+}
+
+interface Items {
+  [key: string]: Item[];
+}
+
 export function Teste() {
-  const [items, setItems] = React.useState({
-    left: [
-      { id: 1, name: "ben" },
-      { id: 2, name: "joe" },
-      { id: 3, name: "jason" },
-      { id: 4, name: "chris" },
-      { id: 5, name: "heather" },
-      { id: 6, name: "Richard" },
-      { id: 7, name: "george" },
-      { id: 8, name: "rupert" },
-      { id: 9, name: "alice" },
-      { id: 10, name: "katherine" },
-      { id: 11, name: "pam" },
-      { id: 12, name: "katie" }
-    ],
-  
+  const [items, setItems] = useState<Items>({
+    left: []
   });
 
-  function onChange(sourceId: string | number, sourceIndex: number, targetIndex: number, targetId: string | number) {
+  useEffect(() => {
+    const initialItems = localStorage.getItem("items");
+    if (initialItems) {
+      setItems(JSON.parse(initialItems));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
+
+  function onChange(
+    sourceId: string | number,
+    sourceIndex: number,
+    targetIndex: number,
+    targetId: string | number
+  ) {
     if (targetId) {
-      const result = move(
+      const result = move<Item>(
         items[sourceId],
         items[targetId],
         sourceIndex,
@@ -43,7 +54,7 @@ export function Teste() {
       });
     }
 
-    const result = swap(items[sourceId], sourceIndex, targetIndex);
+    const result = swap<Item>(items[sourceId], sourceIndex, targetIndex);
     return setItems({
       ...items,
       [sourceId]: result
@@ -56,7 +67,7 @@ export function Teste() {
         <GridDropZone
           className="dropzone left"
           id="left"
-          boxesPerRow={4}
+          boxesPerRow={2}
           rowHeight={70}
         >
           {items.left.map(item => (
@@ -69,7 +80,6 @@ export function Teste() {
             </GridItem>
           ))}
         </GridDropZone>
-      
       </div>
     </GridContextProvider>
   );
