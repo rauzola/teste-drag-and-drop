@@ -23,7 +23,13 @@ export const GlobalStyles = createGlobalStyle`
   a {
     text-decoration: none;
   }
+  .dropzone {
+    /* height: 400px; */
+    .undefined {
+      width: 85% !important;
+    }
 
+  }
 
   margin: 20px;
   .container {
