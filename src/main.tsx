@@ -22,7 +22,7 @@ const arr = [
 ReactDOM.render(
   <React.StrictMode>
     <GlobalStyles />
-    <Teste props={arr} />
+    <Teste />
   </React.StrictMode>,
   document.getElementById("root")
 );
